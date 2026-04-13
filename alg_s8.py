@@ -28,6 +28,21 @@ def subvector_suma_maxima_fuerza_bruta(vector):
     
     Aproximación por fuerza bruta.
     """
+
+    if len(vector) == 0:
+        raise ValueError("El vector no puede estar vacío")
+
+    max_suma = vector[0]
+
+    for i in range(len(vector)):
+        suma_actual = 0
+        for j in range(i, len(vector)):
+            suma_actual += vector[j]
+            if suma_actual > max_suma:
+                max_suma = suma_actual
+
+    return max_suma
+    
     pass
 
 def subvector_suma_maxima_divide_y_venceras(vector):
@@ -36,6 +51,45 @@ def subvector_suma_maxima_divide_y_venceras(vector):
     
     Aproximación Divide y Vencerás.
     """
+
+    if len(vector) == 0:
+        raise ValueError("El vector no puede estar vacío")
+
+    def suma_maxima_cruzada(vector, izquierda, medio, derecha):
+        suma = 0
+        suma_izquierda = float('-inf')
+
+        for i in range(medio, izquierda - 1, -1):
+            suma += vector[i]
+            if suma > suma_izquierda:
+                suma_izquierda = suma
+
+        suma = 0
+        suma_derecha = float('-inf')
+
+        for i in range(medio + 1, derecha + 1):
+            suma += vector[i]
+            if suma > suma_derecha:
+                suma_derecha = suma
+
+        return suma_izquierda + suma_derecha
+
+    def resolver(vector, izquierda, derecha):
+        if izquierda == derecha:
+            return vector[izquierda]
+
+        medio = (izquierda + derecha) // 2
+
+        suma_izquierda = resolver(vector, izquierda, medio)
+        suma_derecha = resolver(vector, medio + 1, derecha)
+        suma_cruzada = suma_maxima_cruzada(vector, izquierda, medio, derecha)
+
+        return max(suma_izquierda, suma_derecha, suma_cruzada)
+
+    return resolver(vector, 0, len(vector) - 1)
+
+
+    
     pass
 
 
